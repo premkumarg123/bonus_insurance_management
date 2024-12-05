@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Agent Portal</h1>
+
+<form method="post">
+    <div class="mb-3">
+        <label for="customer_id" class="form-label">Enter Customer ID</label>
+        <input type="text" class="form-control" id="customer_id" name="customer_id" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+{% if policies %}
+<h3 class="mt-4">Customer Policies</h3>
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>Policy ID</th>
+            <th>Subscription Length</th>
+            <th>Claim Status</th>
+            <th>Vehicle Model</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for policy in policies %}
+        <tr>
+            <td>{{ policy[0] }}</td>
+            <td>{{ policy[1] }}</td>
+            <td>{{ policy[2] }}</td>
+            <td>{{ policy[3] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% if claims %}
+<h3 class="mt-4">Customer Claims</h3>
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>Claim ID</th>
+            <th>Claim Date</th>
+            <th>Claim Amount</th>
+            <th>Claim Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for claim in claims %}
+        <tr>
+            <td>{{ claim[0] }}</td>
+            <td>{{ claim[1] }}</td>
+            <td>{{ claim[2] }}</td>
+            <td>{{ claim[3] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% endblock %}

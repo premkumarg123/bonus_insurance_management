@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Admin Dashboard</h1>
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>Metric</th>
+            <th>Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Total Customers</td>
+            <td>{{ stats['total_customers'] }}</td>
+        </tr>
+        <tr>
+            <td>Total Policies</td>
+            <td>{{ stats['total_policies'] }}</td>
+        </tr>
+        <tr>
+            <td>Total Claims</td>
+            <td>{{ stats['total_claims'] }}</td>
+        </tr>
+        <tr>
+            <td>Total Payments</td>
+            <td>{{ stats['total_payments'] }}</td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}

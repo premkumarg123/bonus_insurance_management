@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Police Portal</h1>
+
+<form method="post" class="mt-4">
+    <div class="mb-3">
+        <label for="search" class="form-label">Enter Vehicle ID or DL Number</label>
+        <input type="text" class="form-control" id="search" name="search" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+{% if details %}
+<h3 class="mt-4">Search Results</h3>
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Address</th>
+            <th>Vehicle Model</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ details[0] }}</td>
+            <td>{{ details[1] }}</td>
+            <td>{{ details[2] }}</td>
+            <td>{{ details[3] }}</td>
+        </tr>
+    </tbody>
+</table>
+{% elif message %}
+<p class="text-danger">{{ message }}</p>
+{% endif %}
+
+{% endblock %}

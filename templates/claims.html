@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Claims Management</h1>
+
+<!-- Form to Update Claim Status -->
+<form method="post" class="mt-4">
+    <div class="mb-3">
+        <label for="claim_id" class="form-label">Claim ID</label>
+        <input type="text" class="form-control" id="claim_id" name="claim_id" required>
+    </div>
+    <div class="mb-3">
+        <label for="new_status" class="form-label">New Claim Status</label>
+        <input type="text" class="form-control" id="new_status" name="new_status" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Update Status</button>
+</form>
+
+<!-- Display All Claims -->
+{% if claims %}
+<h3 class="mt-4">All Claims</h3>
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>Claim ID</th>
+            <th>Policy ID</th>
+            <th>Customer ID</th>
+            <th>Claim Date</th>
+            <th>Claim Amount</th>
+            <th>Claim Status</th>
+            <th>Resolution Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for claim in claims %}
+        <tr>
+            <td>{{ claim[0] }}</td>
+            <td>{{ claim[1] }}</td>
+            <td>{{ claim[2] }}</td>
+            <td>{{ claim[3] }}</td>
+            <td>{{ claim[4] }}</td>
+            <td>{{ claim[5] }}</td>
+            <td>{{ claim[6] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% endblock %}
