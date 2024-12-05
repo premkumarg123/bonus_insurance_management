@@ -66,6 +66,30 @@ def user_portal():
 
     return render_template('user.html')
 
+@app.route('/police', methods=['GET', 'POST'])
+def police_portal():
+    details = None  # Initialize details as None
+    message = None  # Initialize message as None
+    if request.method == 'POST':
+        search_term = request.form.get('search')  # Get the search term from the form
+        print(f"Search Term: {search_term}")  # Debugging
+        try:
+            conn = get_connection()
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT c.customer_name, c.customer_age, c.customer_address, v.model
+                FROM customers c
+                JOIN vehicles v ON c.customer_id = v.customer_id
+                WHERE c.dl_num = %s OR v.vehicle_id::TEXT = %s;
+            """, (search_term, search_term))
+            details = cursor.fetchone()  # Fetch a single result
+            if not details:
+                message = "No records found for the given Vehicle ID or DL Number."
+            conn.close()
+        except Exception as e:
+            message = f"Error: {str(e)}"
+    return render_template('police.html', details=details, message=message)
+
 # Add remaining routes (police, agent, admin, claims, payments) as they are without modification
 # as shown in the original code above.
 
