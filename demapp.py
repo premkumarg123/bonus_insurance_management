@@ -8,12 +8,14 @@ app.secret_key = os.getenv("SECRET_KEY", "default_secret_key")  # Use Heroku's e
 # Database connection
 def get_connection():
     return psycopg2.connect(
-        host=os.getenv("DB_HOST", "localhost"),
-        port=os.getenv("DB_PORT", "5432"),
-        user=os.getenv("DB_USER", "postgres"),
-        password=os.getenv("DB_PASSWORD", "753951"),
-        database=os.getenv("DB_NAME", "insurance_management")
+        dbname="dup1qsmhut9ue",
+        host="c67okggoj39697.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com",
+        port="5432",
+        user="ufqg81vfmipgsr",
+        password="p78dcb84b4473c10d165811be065ca2ee0b38045c162a35e552451a3811908159",
+        sslmode="require"
     )
+
 
 # Home Route
 @app.route('/')
