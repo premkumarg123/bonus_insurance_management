@@ -90,6 +90,116 @@ def police_portal():
             message = f"Error: {str(e)}"
     return render_template('police.html', details=details, message=message)
 
+
+# Agent Portal
+@app.route('/agent', methods=['GET', 'POST'])
+def agent_portal():
+    policies = None
+    claims = None
+    if request.method == 'POST':
+        customer_id = request.form.get('customer_id')
+        try:
+            conn = get_connection()
+            cursor = conn.cursor()
+
+            # Fetch customer policies
+            cursor.execute("""
+                SELECT i.policy_id, i.subscription_length, i.claim_status, v.model
+                FROM insurance i
+                JOIN vehicles v ON i.vehicle_id = v.vehicle_id
+                WHERE i.customer_id = %s;
+            """, (customer_id,))
+            policies = cursor.fetchall()
+
+            # Fetch customer claims
+            cursor.execute("""
+                SELECT claim_id, claim_date, claim_amount, claim_status
+                FROM claims
+                WHERE customer_id = %s;
+            """, (customer_id,))
+            claims = cursor.fetchall()
+
+            conn.close()
+        except Exception as e:
+            flash(f"Error: {str(e)}", "danger")
+    return render_template('agent.html', policies=policies, claims=claims)
+
+
+# Admin Portal
+@app.route('/admin')
+def admin_portal():
+    stats = {}
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        # Fetch statistics
+        cursor.execute("SELECT COUNT(*) FROM customers;")
+        stats['total_customers'] = cursor.fetchone()[0]
+
+        cursor.execute("SELECT COUNT(*) FROM insurance;")
+        stats['total_policies'] = cursor.fetchone()[0]
+
+        cursor.execute("SELECT COUNT(*) FROM claims;")
+        stats['total_claims'] = cursor.fetchone()[0]
+
+        cursor.execute("SELECT COUNT(*) FROM payments;")
+        stats['total_payments'] = cursor.fetchone()[0]
+
+        conn.close()
+    except Exception as e:
+        flash(f"Error: {str(e)}", "danger")
+    return render_template('admin.html', stats=stats)
+
+@app.route('/claims', methods=['GET', 'POST'])
+def claims_portal():
+    claims = None
+    if request.method == 'POST':
+        claim_id = request.form.get('claim_id')
+        new_status = request.form.get('new_status')
+        try:
+            conn = get_connection()
+            cursor = conn.cursor()
+
+            # Update claim status
+            cursor.execute("""
+                UPDATE claims
+                SET claim_status = %s
+                WHERE claim_id = %s;
+            """, (new_status, claim_id))
+
+            conn.commit()
+            flash("Claim status updated successfully!", "success")
+
+            # Fetch all claims
+            cursor.execute("SELECT * FROM claims;")
+            claims = cursor.fetchall()
+        except Exception as e:
+            flash(f"Error: {str(e)}", "danger")
+        finally:
+            conn.close()
+    return render_template('claims.html', claims=claims)
+
+@app.route('/payments', methods=['GET', 'POST'])
+def payments_portal():
+    payments = None
+    if request.method == 'POST':
+        policy_id = request.form.get('policy_id')
+        try:
+            conn = get_connection()
+            cursor = conn.cursor()
+
+            # Fetch payments for a policy
+            cursor.execute("""
+                SELECT payment_id, payment_date, amount, payment_method, payment_status
+                FROM payments
+                WHERE policy_id = %s;
+            """, (policy_id,))
+            payments = cursor.fetchall()
+            conn.close()
+        except Exception as e:
+            flash(f"Error: {str(e)}", "danger")
+    return render_template('payments.html', payments=payments)
 # Add remaining routes (police, agent, admin, claims, payments) as they are without modification
 # as shown in the original code above.
 
